@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from collections import defaultdict
-from keep_alive import keep_alive
 import random
 
 intents = discord.Intents.default()
@@ -174,5 +173,4 @@ async def end_scenario(ctx):
 
 import os
 
-keep_alive()
 bot.run(os.getenv("MTM5MTc1OTAzNDA4NzkwMzMyMg.GgZl2m.Mosjbrj7TaeUSYYh89f9WKUXo9zzftkier6PWY"))
