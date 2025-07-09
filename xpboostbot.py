@@ -6,6 +6,8 @@ import random
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
+
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- User XP Data ---
@@ -26,6 +28,7 @@ user_votes = defaultdict(str)
 @bot.event
 async def on_ready():
     print(f"{bot.user} has connected to Discord!")
+    print(f"✅ Logged in as {bot.user}")
 
 @bot.event
 async def on_message(message):
@@ -175,4 +178,4 @@ async def end_scenario(ctx):
 import os
 
 keep_alive()
-bot.run(os.getenv("MTM5MTc1OTAzNDA4NzkwMzMyMg.GgZl2m.Mosjbrj7TaeUSYYh89f9WKUXo9zzftkier6PWY"))
+bot.run(os.getenv("DISCORD_BOT_TOKEN"))
