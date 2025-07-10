@@ -53,6 +53,16 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # --- Commands ---
+@bot.command()
+async def simulate(ctx, scenario: str):
+    if scenario == "boost":
+        await ctx.send("🚀 Boost scenario triggered! XP has been increased.")
+        # You can add more logic here to simulate XP gain, role changes, etc.
+    elif scenario == "downtime":
+        await ctx.send("💤 Downtime scenario triggered. Bot is going idle.")
+        # Maybe simulate the bot going offline or pausing features
+    else:
+        await ctx.send(f"❓ Unknown scenario: `{scenario}`")
 
 @bot.command(name="xplevel")
 async def xplevel(ctx):
