@@ -3,8 +3,30 @@ from discord.ext import commands
 from collections import defaultdict
 from keep_alive import keep_alive
 import random
+import json
 from scenario import scenario_chapters
 from scenario import side_quests
+
+SAVE_FILE = "save_data.json"
+
+def load_data():
+    global user_data, current_chapter
+    try:
+        with open(SAVE_FILE, "r") as f:
+            data = json.load(f)
+            user_data = data.get("user_data", {})
+            current_chapter = data.get("current_chapter", 0)
+    except FileNotFoundError:
+        user_data = {}
+        current_chapter = 0
+
+def save_data():
+    data = {
+        "user_data": user_data,
+        "current_chapter": current_chapter
+    }
+    with open(SAVE_FILE, "w") as f:
+        json.dump(data, f, indent=4)
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,6 +36,7 @@ current_chapter = 0
 completed_users = set()  # Optional quest tracking
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+load_data()  # ✅ Load saved data when bot starts
 
 # --- User XP Data ---
 user_data = {}
@@ -58,6 +81,28 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # --- Commands ---
+@bot.command(name="resetallxp")
+@commands.has_permissions(administrator=True)
+async def resetallxp(ctx):
+    global user_data
+    if not user_data:
+        await ctx.send("⚠️ No XP data found to reset.")
+        return
+
+    for uid in user_data.keys():
+        user_data[uid] = {"xp": 0, "level": 1}
+
+    save_data()
+    await ctx.send("🧹 All user XP and levels have been reset to default.")
+
+@bot.command(name="resetstory")
+@commands.has_permissions(administrator=True)
+async def resetstory(ctx):
+    global current_chapter
+    current_chapter = 0
+    save_data()
+    await ctx.send("📖 Story progress reset to Chapter 0.")
+
 @bot.command()
 async def completequest(ctx, name: str):
     role = discord.utils.get(ctx.guild.roles, name="Event Completed")
