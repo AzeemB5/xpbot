@@ -81,6 +81,25 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # --- Commands ---
+@bot.command()
+async def choosequest(ctx, *, choice: str):
+    global quest_active, active_quest_choices, user_quest_votes
+
+    if not quest_active:
+        await ctx.send("❌ No active quest to vote on.")
+        return
+
+    choice = choice.strip().lower()
+    normalized = {c.lower(): c for c in active_quest_choices}
+
+    if choice not in normalized:
+        await ctx.send(f"⚠️ Invalid choice. Pick one of: {', '.join(active_quest_choices)}")
+        return
+
+    actual_choice = normalized[choice]
+    user_quest_votes[ctx.author.id] = actual_choice
+    await ctx.send(f"✅ {ctx.author.mention}, your vote for '**{actual_choice}**' has been recorded.")
+
 @bot.command(name="resetallxp")
 @commands.has_permissions(administrator=True)
 async def resetallxp(ctx):
@@ -122,11 +141,30 @@ async def completequest(ctx, name: str):
           
 @bot.command()
 async def quest(ctx, name: str):
-    name = name.lower()
-    if name in side_quests:
-        await ctx.send(side_quests[name])
-    else:
-        await ctx.send(f"❌ Unknown quest: `{name}`. Try one of: {', '.join(side_quests.keys())}")
+    global current_chapter, quest_active, active_quest_choices, user_quest_votes
+
+    name = name.strip().lower()
+
+    if name not in side_quests:
+        await ctx.send(f"❌ Quest `{name}` does not exist.")
+        return
+
+    required_chapter = unlock_requirements.get(name, 0)
+    if current_chapter < required_chapter:
+        await ctx.send(f"🔒 Quest `{name}` is locked. Reach Chapter {required_chapter} to unlock it.")
+        return
+
+    quest_data = side_quests[name]
+    quest_text = quest_data["text"]
+    active_quest_choices = quest_data["choices"]
+    user_quest_votes.clear()
+    quest_active = True
+
+    choices_text = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(active_quest_choices)])
+    await ctx.send(
+        f"🧭 **Side Quest: {name.title()}**\n{quest_text}\n\n"
+        f"**Choices:**\n{choices_text}\nType `!choosequest <option>` to vote!"
+    )
 
 @bot.command()
 async def scenario(ctx):
