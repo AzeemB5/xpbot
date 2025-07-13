@@ -82,6 +82,33 @@ async def on_message(message):
 
 # --- Commands ---
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def end_questvote(ctx):
+    global quest_active, user_quest_votes, active_quest_choices
+
+    if not quest_active:
+        await ctx.send("❌ No active quest voting.")
+        return
+
+    if not user_quest_votes:
+        await ctx.send("⚠️ No votes were cast.")
+        quest_active = False
+        return
+
+    vote_tally = defaultdict(int)
+    for vote in user_quest_votes.values():
+        vote_tally[vote] += 1
+
+    max_votes = max(vote_tally.values())
+    winners = [opt for opt, count in vote_tally.items() if count == max_votes]
+    winning_choice = winners[0]
+
+    await ctx.send(f"📊 **Quest resolved!** Winning choice: **{winning_choice}** with {max_votes} votes.")
+    user_quest_votes.clear()
+    active_quest_choices.clear()
+    quest_active = False
+
+@bot.command()
 async def choosequest(ctx, *, choice: str):
     global quest_active, active_quest_choices, user_quest_votes
 
@@ -158,7 +185,8 @@ async def quest(ctx, name: str):
     quest_text = quest_data["text"]
     active_quest_choices = quest_data["choices"]
     user_quest_votes.clear()
-    quest_active = True
+
+    quest_active = True  # 🧩 This activates voting!
 
     choices_text = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(active_quest_choices)])
     await ctx.send(
