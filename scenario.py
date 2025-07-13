@@ -15,3 +15,12 @@ scenario_chapters = [
     "🧙 **Chapter 13: Legacy Unlocked** — Those who held roles before the Surge gain ancestral titles.",
     "🌅 **Finale: Reboot of Realms** — The server stabilizes. New nicknames, powers, and logs etched in lore. Peace… for now."
 ]
+
+side_quests = {
+    "signal_trace": "📡 Side Quest: A broken signal pulses through #off-topic. Trace its origin using !pingtrack.",
+    "artifact_hunt": "🔍 Side Quest: A lost artifact is buried in the server’s oldest channel. Can anyone recover it?",
+    "ghost_log": "👻 Side Quest: An erased log returns for 10 seconds... but only one role can read it.",
+    "nickname_shard": "🧩 Side Quest: A piece of a forgotten nickname has appeared. Combine three shards to unlock Chapter Zero.",
+    "mirror_role": "🎭 Side Quest: A role appears identical to yours... but its actions betray you.",
+    "time_jump": "⏳ Side Quest: Temporarily revert the server to a state before Chapter 5. Are you ready for the consequences?"
+}
