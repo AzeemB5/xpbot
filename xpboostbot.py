@@ -53,6 +53,27 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # --- Commands ---
+# Keep track of current scenario step
+scenario_step = 0
+
+@bot.command()
+async def scenario(ctx):
+    global scenario_step
+
+    if scenario_step == 0:
+        await ctx.send("📘 Chapter 1: The Boost Begins. XP surge detected across the server.")
+    elif scenario_step == 1:
+        await ctx.send("⚡ Chapter 2: Role Awakening. Special roles are beginning to activate...")
+    elif scenario_step == 2:
+        await ctx.send("🔒 Chapter 3: Lockdown Protocol. A mysterious force blocks XP gain temporarily.")
+    elif scenario_step == 3:
+        await ctx.send("🔥 Final Chapter: The Reset. All nicknames reset. Server reboots into the next era.")
+    else:
+        await ctx.send("✅ Scenario complete! The story has reached its end.")
+        return
+
+    scenario_step += 1  # Advance to the next chapter
+
 @bot.command()
 async def simulate(ctx, scenario: str):
     if scenario == "boost":
