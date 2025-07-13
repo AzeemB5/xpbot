@@ -119,7 +119,7 @@ async def completequest(ctx, name: str):
         role = discord.utils.get(ctx.guild.roles, name="Event Completed")
         if role:
             await ctx.author.add_roles(role)
-
+          
 @bot.command()
 async def quest(ctx, name: str):
     name = name.lower()
@@ -155,12 +155,7 @@ async def scenario(ctx):
         f"Type `!choose <option>` to vote!"
     )
         
-        # Try to add role
-        role = discord.utils.get(ctx.guild.roles, name="Event Completed")
-        if role:
-            await ctx.author.add_roles(role)
-        else:
-            await ctx.send("⚠️ Role not found: `Event Completed`. Please create it in the server settings.")
+       
 
 @bot.command()
 async def reset_scenario(ctx):
