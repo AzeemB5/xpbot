@@ -121,22 +121,6 @@ async def completequest(ctx, name: str):
             await ctx.author.add_roles(role)
 
 @bot.command()
-async def scenario(ctx):
-    global current_chapter
-    if current_chapter < len(scenario_chapters):
-        await ctx.send(scenario_chapters[current_chapter])
-        current_chapter += 1
-    else:
-        await ctx.send("🏁 All chapters complete! You’ve unlocked the **Event Completed** role. 🎉")
-
-        # Try to add role
-        role = discord.utils.get(ctx.guild.roles, name="Event Completed")
-        if role:
-            await ctx.author.add_roles(role)
-        else:
-            await ctx.send("⚠️ Role not found: `Event Completed`. Please create it in the server settings.")
-
-@bot.command()
 async def quest(ctx, name: str):
     name = name.lower()
     if name in side_quests:
@@ -152,6 +136,13 @@ async def scenario(ctx):
         current_chapter += 1
     else:
         await ctx.send("🏁 **End of Arc** — All chapters complete. Awaiting a new story to begin.")
+
+        # Try to add role
+        role = discord.utils.get(ctx.guild.roles, name="Event Completed")
+        if role:
+            await ctx.author.add_roles(role)
+        else:
+            await ctx.send("⚠️ Role not found: `Event Completed`. Please create it in the server settings.")
 
 @bot.command()
 async def reset_scenario(ctx):
