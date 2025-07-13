@@ -134,7 +134,7 @@ async def scenario(ctx):
     if current_chapter < len(scenario_chapters):
         await ctx.send(scenario_chapters[current_chapter])
         current_chapter += 1
-       save_data()
+        save_data()
     else:
         await ctx.send("🏁 **End of Arc** — All chapters complete. Awaiting a new story to begin.")
         return
