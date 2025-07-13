@@ -63,10 +63,28 @@ scenario_chapters = [
 
 
 side_quests = {
-    "signal_trace": "📡 Side Quest: A broken signal pulses through #off-topic. Trace its origin using !pingtrack.",
-    "artifact_hunt": "🔍 Side Quest: A lost artifact is buried in the server’s oldest channel. Can anyone recover it?",
-    "ghost_log": "👻 Side Quest: An erased log returns for 10 seconds... but only one role can read it.",
-    "nickname_shard": "🧩 Side Quest: A piece of a forgotten nickname has appeared. Combine three shards to unlock Chapter Zero.",
-    "mirror_role": "🎭 Side Quest: A role appears identical to yours... but its actions betray you.",
-    "time_jump": "⏳ Side Quest: Temporarily revert the server to a state before Chapter 5. Are you ready for the consequences?"
+    "signal_trace": {
+        "text": "📡 A broken signal pulses through #off-topic. Trace its origin using `!pingtrack`.",
+        "choices": ["Use diagnostics", "Ask the mods", "Ignore the signal"]
+    },
+    "artifact_hunt": {
+        "text": "🧭 A lost artifact is buried in the server's oldest channel. Can anyone recover it?",
+        "choices": ["Search logs", "Ask legacy users", "Run `!dig <channel>`"]
+    },
+    "ghost_log": {
+        "text": "👻 An erased log returns for 10 seconds... but only one role can read it.",
+        "choices": ["Run `!ghostread`", "Assign 'Spectral Reader' role", "Ignore the glitch"]
+    },
+    "nickname_shard": {
+        "text": "🧩 A piece of a forgotten nickname has appeared. Combine three shards to unlock Chapter Zero.",
+        "choices": ["Run `!collectshard`", "Ask others for shards", "Use as temp nickname"]
+    },
+    "mirror_role": {
+        "text": "🎭 A role appears identical to yours... but its actions betray you.",
+        "choices": ["Run `!rolecompare`", "Strip the role", "Let it act freely"]
+    },
+    "time_jump": {
+        "text": "⏳ Temporarily revert the server to a state before Chapter 5. Are you ready for the consequences?",
+        "choices": ["Run `!timejump`", "Simulate rollback", "Reject jump"]
+    }
 }
