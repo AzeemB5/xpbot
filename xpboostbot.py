@@ -4,11 +4,14 @@ from collections import defaultdict
 from keep_alive import keep_alive
 import random
 from scenario import scenario_chapters
-current_chapter = 0
+from scenario import side_quests
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
+
+current_chapter = 0
+completed_users = set()  # Optional quest tracking
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -55,6 +58,47 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # --- Commands ---
+@bot.command()
+async def completequest(ctx, name: str):
+    role = discord.utils.get(ctx.guild.roles, name="Event Completed")
+    if role:
+        await ctx.author.add_roles(role)
+        await ctx.send(f"✅ Quest `{name}` completed. You’ve been awarded the **Event Completed** role!")
+    else:
+        await ctx.send("⚠️ Role `Event Completed` not found.")
+
+        # Optional: unlock global quest once 5 users complete
+        if len(completed_users) >= 5 and current_chapter >= 6:
+            await ctx.send("🌟 A new faction quest has been unlocked for all players!")
+
+        role = discord.utils.get(ctx.guild.roles, name="Event Completed")
+        if role:
+            await ctx.author.add_roles(role)
+
+@bot.command()
+async def scenario(ctx):
+    global current_chapter
+    if current_chapter < len(scenario_chapters):
+        await ctx.send(scenario_chapters[current_chapter])
+        current_chapter += 1
+    else:
+        await ctx.send("🏁 All chapters complete! You’ve unlocked the **Event Completed** role. 🎉")
+
+        # Try to add role
+        role = discord.utils.get(ctx.guild.roles, name="Event Completed")
+        if role:
+            await ctx.author.add_roles(role)
+        else:
+            await ctx.send("⚠️ Role not found: `Event Completed`. Please create it in the server settings.")
+
+@bot.command()
+async def quest(ctx, name: str):
+    name = name.lower()
+    if name in side_quests:
+        await ctx.send(side_quests[name])
+    else:
+        await ctx.send(f"❌ Unknown quest: `{name}`. Try one of: {', '.join(side_quests.keys())}")
+
 @bot.command()
 async def scenario(ctx):
     global current_chapter
