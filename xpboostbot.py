@@ -137,7 +137,24 @@ async def scenario(ctx):
        save_data()
     else:
         await ctx.send("🏁 **End of Arc** — All chapters complete. Awaiting a new story to begin.")
+        return
+        
+    # Pull current chapter’s scene and choices
+    chapter = scenario_chapters[current_chapter]
+    story_text = chapter["text"]
+    scenario_choices = chapter["choices"]
+    user_votes.clear()
+    scenario_active = True
 
+    # Format choice list
+    choices_text = "\n".join([f"{i+1}. {choice}" for i, choice in enumerate(scenario_choices)])
+
+    await ctx.send(
+        f"{story_text}\n\n"
+        f"**Choices:**\n{choices_text}\n\n"
+        f"Type `!choose <option>` to vote!"
+    )
+        
         # Try to add role
         role = discord.utils.get(ctx.guild.roles, name="Event Completed")
         if role:
@@ -185,6 +202,29 @@ async def xpboard(ctx):
         leaderboard_text += f"{idx}. {user.name} - Level {data['level']} ({data['xp']} XP)\n"
 
     await ctx.send(leaderboard_text)
+
+@bot.command(name="storystatus")
+async def storystatus(ctx):
+    global current_chapter, scenario_active, scenario_choices, user_votes
+
+    if current_chapter >= len(scenario_chapters):
+        await ctx.send("📖 All chapters complete! The story has ended.")
+        return
+
+    chapter = scenario_chapters[current_chapter]
+    chapter_title = chapter["text"].split("**")[1] if "**" in chapter["text"] else "Current Chapter"
+
+    status_text = f"📘 **Story Status**\n"
+    status_text += f"• Current Chapter: **{chapter_title}**\n"
+    status_text += f"• Voting Active: {'✅ Yes' if scenario_active else '❌ No'}\n"
+
+    if scenario_active:
+        status_text += f"• Votes Cast: **{len(user_votes)}**\n"
+        status_text += "• Available Choices:\n"
+        for idx, choice in enumerate(scenario_choices, start=1):
+            status_text += f"   {idx}. {choice}\n"
+
+    await ctx.send(status_text)
 
 @bot.command(name="xphelp")
 async def xphelp(ctx):
