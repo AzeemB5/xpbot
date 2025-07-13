@@ -166,6 +166,7 @@ async def scenario(ctx):
 async def reset_scenario(ctx):
     global current_chapter
     current_chapter = 0
+    save_data()
     await ctx.send("🔄 **Scenario reset!** The arc begins anew...")
 
 @bot.command()
