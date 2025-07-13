@@ -130,32 +130,25 @@ async def quest(ctx, name: str):
 
 @bot.command()
 async def scenario(ctx):
-    global current_chapter
-    if current_chapter < len(scenario_chapters):
-        await ctx.send(scenario_chapters[current_chapter])
-        current_chapter += 1
-        save_data()
-    else:
-        await ctx.send("🏁 **End of Arc** — All chapters complete. Awaiting a new story to begin.")
+    global current_chapter, scenario_active, scenario_choices, user_votes
+
+    if current_chapter >= len(scenario_chapters):
+        await ctx.send("🏁 The story has ended. All chapters completed.")
         return
-        
-    # Pull current chapter’s scene and choices
+
     chapter = scenario_chapters[current_chapter]
     story_text = chapter["text"]
     scenario_choices = chapter["choices"]
+
     user_votes.clear()
-    scenario_active = True
+    scenario_active = True  # ✅ This line is critical!
 
-    # Format choice list
     choices_text = "\n".join([f"{i+1}. {choice}" for i, choice in enumerate(scenario_choices)])
-
     await ctx.send(
         f"{story_text}\n\n"
         f"**Choices:**\n{choices_text}\n\n"
         f"Type `!choose <option>` to vote!"
     )
-        
-       
 
 @bot.command()
 async def reset_scenario(ctx):
