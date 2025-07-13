@@ -230,20 +230,26 @@ async def xphelp(ctx):
     await ctx.send(help_text)
 
 # --- Scenario Commands ---
-@bot.command(name="choose")
+@bot.command()
 async def choose(ctx, *, choice: str):
-    global scenario_active, user_votes
+    global scenario_active, scenario_choices, user_votes
+
     if not scenario_active:
-        await ctx.send("There is no active scenario.")
+        await ctx.send("❌ There’s no active scenario to vote on.")
         return
 
-    choice = choice.lower()
-    if choice not in scenario_choices:
-        await ctx.send(f"❌ Invalid choice. Choose from: {', '.join(scenario_choices)}")
+    choice = choice.strip().lower()  # 🧼 Normalize input
+
+    # Normalize all choices for matching
+    normalized_choices = {c.lower(): c for c in scenario_choices}
+
+    if choice not in normalized_choices:
+        await ctx.send(f"⚠️ Invalid choice. Pick one of: {', '.join(scenario_choices)}")
         return
 
-    user_votes[ctx.author.id] = choice
-    await ctx.send(f"{ctx.author.mention}, your vote for '{choice}' has been recorded!")
+    actual_choice = normalized_choices[choice]
+    user_votes[ctx.author.id] = actual_choice
+    await ctx.send(f"✅ {ctx.author.mention}, your vote for '**{actual_choice}**' has been recorded.")
 
 @bot.command(name="end_scenario")
 @commands.has_permissions(administrator=True)
