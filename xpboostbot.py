@@ -200,27 +200,6 @@ async def xphelp(ctx):
     await ctx.send(help_text)
 
 # --- Scenario Commands ---
-@bot.command(name="scenario")
-@commands.has_permissions(administrator=True)
-async def scenario(ctx):
-    global scenario_active, scenario_choices, user_votes
-    if scenario_active:
-        await ctx.send("A scenario is already active!")
-        return
-
-    scenario_choices = ["stab", "run", "call", "juke"]
-    scenario_active = True
-    user_votes.clear()
-
-    choices_text = "\n".join([f"{idx+1}. {choice.capitalize()}" for idx, choice in enumerate(scenario_choices)])
-    await ctx.send(
-        "**🧩 Scenario Begins!**\n"
-        "You’re being chased through the woods by a masked killer. You’ve got a phone and a pocketknife.\n"
-        "What will you do?\n" +
-        choices_text +
-        "\n\nType `!choose <option>` to vote!"
-    )
-
 @bot.command(name="choose")
 async def choose(ctx, *, choice: str):
     global scenario_active, user_votes
