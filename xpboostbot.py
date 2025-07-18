@@ -181,7 +181,7 @@ async def completequest(ctx, name: str):
           
 @bot.command()
 async def quest(ctx, name: str):
-    global current_chapter, quest_active, active_quest_choices, user_quest_votes
+    global quest_active, active_quest_choices, user_quest_votes, current_chapter
 
     name = name.strip().lower()
 
@@ -196,10 +196,12 @@ async def quest(ctx, name: str):
 
     quest_data = side_quests[name]
     quest_text = quest_data["text"]
-    active_quest_choices = quest_data["choices"]
-    user_quest_votes.clear()
 
-    quest_active = True  # 🧩 This activates voting!
+    # 🎲 Randomize 3 quest options
+    active_quest_choices = random.sample(quest_data["choices"], k=3)
+
+    user_quest_votes.clear()
+    quest_active = True
 
     choices_text = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(active_quest_choices)])
     await ctx.send(
