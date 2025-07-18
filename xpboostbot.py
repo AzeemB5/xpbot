@@ -209,7 +209,7 @@ async def quest(ctx, name: str):
 
 @bot.command()
 async def scenario(ctx):
-    global current_chapter, scenario_active, user_votes
+    global current_chapter, scenario_active, scenario_choices, user_votes
 
     if current_chapter >= len(scenario_chapters):
         await ctx.send("🏁 The story has ended. All chapters completed.")
@@ -218,9 +218,8 @@ async def scenario(ctx):
     chapter = scenario_chapters[current_chapter]
     story_text = chapter["text"]
 
-    # Always shuffle fresh copy
-    scenario_choices = chapter["choices"][:]
-    random.shuffle(scenario_choices)
+    # 🎲 Randomize 3 options from the chapter's pool
+    scenario_choices = random.sample(chapter["question_pool"], k=3)
 
     user_votes.clear()
     scenario_active = True
@@ -228,7 +227,7 @@ async def scenario(ctx):
     choices_text = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(scenario_choices)])
     await ctx.send(
         f"{story_text}\n\n"
-        f"**Choices (shuffled):**\n{choices_text}\n\n"
+        f"**Choices:**\n{choices_text}\n\n"
         f"Type `!choose <option>` to vote!"
     )
 
