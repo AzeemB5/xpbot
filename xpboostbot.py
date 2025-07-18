@@ -83,6 +83,19 @@ async def on_message(message):
 # --- Commands ---
 @bot.command()
 @commands.has_permissions(administrator=True)
+async def setchapter(ctx, number: int):
+    global current_chapter
+
+    if number < 0 or number >= len(scenario_chapters):
+        await ctx.send(f"❌ Invalid chapter number. Must be between 0 and {len(scenario_chapters)-1}.")
+        return
+
+    current_chapter = number
+    save_data()
+    await ctx.send(f"✅ Chapter manually set to **{number}**.")
+
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def end_questvote(ctx):
     global quest_active, user_quest_votes, active_quest_choices
 
